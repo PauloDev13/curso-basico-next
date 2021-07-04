@@ -12,6 +12,9 @@ interface CommentsProps {
 
 export default function Post({ comments }: CommentsProps) {
   const router = useRouter();
+  if (router.isFallback) {
+    return <p>Loading....</p>;
+  }
   return (
     <>
       <h1>Lista de Comentários do Post {router.query.id}</h1>
@@ -42,17 +45,17 @@ export const getStaticProps: GetStaticProps<CommentsProps> = async contex => {
   };
 };
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await fetch('http://localhost:3333/posts');
-  const posts = await res.json();
-
-  const paths = posts.map(post => {
-    return {
-      params: { id: String(post.id) },
-    };
-  });
+  // const res = await fetch('http://localhost:3333/posts');
+  // const posts = await res.json();
+  //
+  // const paths = posts.map(post => {
+  //   return {
+  //     params: { id: String(post.id) },
+  //   };
+  // });
 
   return {
-    paths,
-    fallback: false,
+    paths: [],
+    fallback: true,
   };
 };
