@@ -34,5 +34,6 @@ export const getStaticProps: GetStaticProps<PostProps> = async contex => {
     props: {
       posts,
     },
+    revalidate: 10,
   };
 };
