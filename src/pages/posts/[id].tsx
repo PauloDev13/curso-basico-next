@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import SEO from '../../components/SEO';
 
 interface Comment {
   id: string;
@@ -17,6 +18,7 @@ export default function Post({ comments }: CommentsProps) {
   }
   return (
     <>
+      <SEO title="Lista Posts" />
       <h1>Lista de Comentários do Post {router.query.id}</h1>
       <ul>
         {comments.map(comment => (

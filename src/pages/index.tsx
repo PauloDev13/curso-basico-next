@@ -1,6 +1,8 @@
 // import { useEffect, useState } from 'react';
 
 import { GetServerSideProps } from 'next';
+import SEO from '../components/SEO';
+import React from 'react';
 
 interface Post {
   id: string;
@@ -27,6 +29,7 @@ const Home = ({ posts }: HomeProps) => {
 
   return (
     <div>
+      <SEO title="Home" />
       <div>
         <h1>Posts</h1>
         <ul>
@@ -41,7 +44,7 @@ const Home = ({ posts }: HomeProps) => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps<HomeProps> =
-  async contex => {
+  async context => {
     const res = await fetch('http://localhost:3333/posts');
     const posts: Post[] = await res.json();
 
