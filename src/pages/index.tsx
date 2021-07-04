@@ -1,23 +1,29 @@
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
+
+import { GetServerSideProps } from 'next';
 
 interface Post {
   id: string;
   title: string;
 }
 
-export default function Home() {
-  const [posts, setPosts] = useState<Post[]>([]);
+interface HomeProps {
+  posts: Post[];
+}
 
-  const getPosts = async () => {
-    const dados = await fetch('http://localhost:3333/posts');
-    const data = await dados.json();
-    setPosts(data);
-    // console.log(data);
-  };
-
-  useEffect(() => {
-    getPosts();
-  }, []);
+const Home = ({ posts }: HomeProps) => {
+  // const [posts, setPosts] = useState<HomeProps>([]);
+  //
+  // const getPosts = async () => {
+  //   const res = await fetch('http://localhost:3333/posts');
+  //   const data = await res.json();
+  //   setPosts(data);
+  //   console.log(data);
+  // };
+  //
+  // useEffect(() => {
+  //   getPosts();
+  // }, []);
 
   return (
     <div>
@@ -31,4 +37,22 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+export default Home;
+
+export const getServerSideProps: GetServerSideProps<HomeProps> =
+  async contex => {
+    const res = await fetch('http://localhost:3333/posts');
+    const posts: Post[] = await res.json();
+
+    if (!posts) {
+      return {
+        notFound: true,
+      };
+    }
+    return {
+      props: {
+        posts,
+      },
+    };
+  };
