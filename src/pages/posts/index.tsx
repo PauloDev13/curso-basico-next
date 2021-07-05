@@ -24,7 +24,7 @@ export default function Post({ posts }: PostProps) {
       <main className={styles.container}>
         <div className={styles.posts}>
           {posts.map(post => (
-            <Link  href={`/posts/${post.slug}`} key={post.slug} >
+            <Link href={`/posts/${post.slug}`} key={post.slug}>
               <a>
                 <time>{post.updateAt}</time>
                 <strong>{post.title}</strong>
@@ -38,7 +38,7 @@ export default function Post({ posts }: PostProps) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async contex => {
+export const getStaticProps: GetStaticProps = async context => {
   const prismic = getPrismicClient();
 
   const response = await prismic.query(

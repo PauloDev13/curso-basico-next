@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import Prismic from '@prismicio/client';
+
 import { RichText } from 'prismic-dom';
 
 import { getPrismicClient } from '../../services/prismic';
