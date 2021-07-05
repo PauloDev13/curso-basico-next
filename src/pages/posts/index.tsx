@@ -1,30 +1,37 @@
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
+import Prismic from '@prismicio/client';
+import { RichText } from 'prismic-dom';
 
 import styles from './posts.module.scss';
 import SEO from '../../components/SEO';
+import { getPrismicClient } from '../../services/prismic';
 
 interface Post {
-  id: string;
+  slug: string;
   title: string;
+  excerpt: string;
+  updateAt: string;
 }
 
 interface PostProps {
   posts: Post[];
 }
-export default function Post() {
+export default function Post({ posts }: PostProps) {
   return (
     <>
       <SEO title="Posts" />
       <main className={styles.container}>
         <div className={styles.posts}>
-          <Link href="#">
-            <a>
-              <time>25 de dezembro de 2021</time>
-              <strong>Titulo</strong>
-              <p>Parágrafo</p>
-            </a>
-          </Link>
+          {posts.map(post => (
+            <Link key={post.slug} href="#">
+              <a>
+                <time>{post.updateAt}</time>
+                <strong>{post.title}</strong>
+                <p>{post.excerpt}</p>
+              </a>
+            </Link>
+          ))}
         </div>
       </main>
     </>
@@ -32,13 +39,40 @@ export default function Post() {
 }
 
 export const getStaticProps: GetStaticProps = async contex => {
-  // if (!posts) {
-  //   return {
-  //     notFound: true,
-  //   };
-  // }
+  const prismic = getPrismicClient();
+
+  const response = await prismic.query(
+    [Prismic.predicates.at('document.type', 'post')],
+    {
+      fetch: ['post.title', 'post.content'],
+    },
+  );
+
+  if (!response) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const posts = response.results.map(post => {
+    return {
+      slug: post.uid,
+      title: RichText.asText(post.data.title),
+      excerpt:
+        post.data.content.find(content => content.type === 'paragraph')?.text ??
+        '',
+      updateAt: new Date(post.last_publication_date).toLocaleDateString(
+        'pt-BR',
+        {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        },
+      ),
+    };
+  });
   return {
-    props: {},
+    props: { posts },
     revalidate: 60 * 60 * 12, //revalida após 12 horas
   };
 };
