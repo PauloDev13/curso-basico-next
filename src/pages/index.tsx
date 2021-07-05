@@ -1,61 +1,26 @@
-// import { useEffect, useState } from 'react';
-
-import { GetServerSideProps } from 'next';
 import SEO from '../components/SEO';
 import React from 'react';
+import styles from '../styles/home.module.scss';
 
-interface Post {
-  id: string;
-  title: string;
-}
-
-interface HomeProps {
-  posts: Post[];
-}
-
-const Home = ({ posts }: HomeProps) => {
-  // const [posts, setPosts] = useState<HomeProps>([]);
-  //
-  // const getPosts = async () => {
-  //   const res = await fetch('http://localhost:3333/posts');
-  //   const data = await res.json();
-  //   setPosts(data);
-  //   console.log(data);
-  // };
-  //
-  // useEffect(() => {
-  //   getPosts();
-  // }, []);
-
+const Home = () => {
   return (
-    <div>
+    <>
       <SEO title="Home" />
-      <div>
-        <h1>Posts</h1>
-        <ul>
-          {posts.map(post => (
-            <li key={post.id}>{post.title}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
+      <main className={styles.content}>
+        <section className={styles.section}>
+          <span>Olá Dev!</span>
+          <h1>
+            Bem vindo e Bem vinda <br />
+            ao <span>Dev</span> News!
+          </h1>
+          <p>
+            Um blog com conteúdos extremamente <br />
+            <span>relevantes para seu aprendizado.</span>
+          </p>
+        </section>
+        <img src="/home.svg" alt="Home image" />
+      </main>
+    </>
   );
 };
 export default Home;
-
-export const getServerSideProps: GetServerSideProps<HomeProps> =
-  async context => {
-    const res = await fetch('http://localhost:3333/posts');
-    const posts: Post[] = await res.json();
-
-    if (!posts) {
-      return {
-        notFound: true,
-      };
-    }
-    return {
-      props: {
-        posts,
-      },
-    };
-  };
